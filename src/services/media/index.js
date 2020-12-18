@@ -30,7 +30,6 @@ mediaRouter.get("/", async (req, res, next) => {
       else if (req.query.type) filterdMedia = media.filter((movie) => movie.Type.toLowerCase().includes(req.query.type.toLowerCase()));
       res.send(filterdMedia);
     } else {
-      console.log("hello");
       res.send(media);
     }
   } catch (error) {
@@ -161,7 +160,7 @@ mediaRouter.post("/:id/upload", cloudinaryMulter.single("image"), async (req, re
   try {
     const media = await getMedia();
     const movieIndex = media.findIndex((movie) => movie.imdbID === req.params.id);
-    console.log(movieIndex);
+
     if (movieIndex !== -1) {
       // movie found
       const updatedMedia = [...media.slice(0, movieIndex), { ...media[movieIndex], Poster: req.file.path }, ...media.slice(movieIndex + 1)];
@@ -174,7 +173,6 @@ mediaRouter.post("/:id/upload", cloudinaryMulter.single("image"), async (req, re
       next(err);
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
@@ -215,7 +213,6 @@ mediaRouter.get("/catalogue/PDF", async (req, res, next) => {
       next(err);
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
