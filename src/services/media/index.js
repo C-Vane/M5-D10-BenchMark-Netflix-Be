@@ -4,7 +4,7 @@ const axios = require("axios");
 const { createReadStream } = require("fs-extra");
 const { join } = require("path");
 const { pipeline } = require("stream");
-const { uniqid } = require("uniqid");
+const uniqid = require("uniqid");
 const { getMedia, writeMedia } = require("../../fsUtilities");
 const mediaRouter = express.Router();
 
