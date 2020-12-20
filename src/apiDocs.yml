@@ -646,10 +646,9 @@ definitions:
       role:
         type: string
         example: admin
-
 schemes:
-  - https
   - http
+  - https
 # Added by API Auto Mocking Plugin
 #host: virtserver.swaggerhub.com
 #basePath: /vane/Netflix/1.0.0
