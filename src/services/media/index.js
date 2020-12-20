@@ -1,9 +1,7 @@
 const express = require("express");
 const { check, validationResult, matchedData } = require("express-validator");
 const axios = require("axios");
-const { createReadStream } = require("fs-extra");
 const { join } = require("path");
-const { pipeline } = require("stream");
 const uniqid = require("uniqid");
 const { getMedia, writeMedia } = require("../../fsUtilities");
 const mediaRouter = express.Router();
@@ -50,7 +48,7 @@ mediaRouter.get("/:id", async (req, res, next) => {
     } else {
       const err = new Error();
       err.httpStatusCode = 404;
-      err.message = "Movie Not Found";
+      err.message = "Media Not Found";
       next(err);
     }
   } catch (error) {
@@ -77,7 +75,7 @@ mediaRouter.post(
         };
         media.push(newMovie);
         await writeMedia(media);
-        res.satus(201).send("Done" + { imdbID: newMovie.imdbID });
+        res.satus(201).send(newMoviem);
       }
     } catch (error) {
       console.log(error);

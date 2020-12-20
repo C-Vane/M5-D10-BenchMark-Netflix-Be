@@ -1,9 +1,6 @@
 const express = require("express");
-const { check, validationResult, matchedData } = require("express-validator");
-const { createReadStream } = require("fs-extra");
-const { join } = require("path");
-const { pipeline } = require("stream");
-const { getMedia, writeMedia } = require("../../fsUtilities");
+const { check, validationResult } = require("express-validator");
+const { getMedia, writeMedia, getUsers } = require("../../fsUtilities");
 const reviewsRouter = express.Router();
 const uniqid = require("uniqid");
 
@@ -26,7 +23,12 @@ reviewsRouter.get("/:id", async (req, res, next) => {
 });
 reviewsRouter.post(
   "/",
-  [check("comment").exists().withMessage("Commment is required"), check("rate").exists().withMessage("Rate is required"), check("elementID").exists().withMessage("Element ID is required")],
+  [
+    check("comment").exists().withMessage("Commment is required"),
+    check("rate").exists().withMessage("Rate is required"),
+    check("elementID").exists().withMessage("Element ID is required"),
+    check("userId").exists().withMessage("User ID is required"),
+  ],
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
@@ -37,8 +39,10 @@ reviewsRouter.post(
         next(error);
       } else {
         const media = await getMedia();
+        const users = await getUsers();
         const movieIndex = media.findIndex((movie) => movie.imdbID === req.body.elementID);
-        if (movieIndex !== -1) {
+        const userIndex = users.findIndex((user) => user._id === req.body.userId);
+        if (movieIndex !== -1 && userIndex !== -1) {
           // movie found
           const reviews = media[movieIndex].reviews || [];
           newReview = {
@@ -66,7 +70,12 @@ reviewsRouter.post(
 
 reviewsRouter.put(
   "/:id",
-  [check("comment").exists().withMessage("Commment is required"), check("rate").exists().withMessage("Rate is required"), check("elementID").exists().withMessage("Element ID is required")],
+  [
+    check("comment").exists().withMessage("Commment is required"),
+    check("rate").exists().withMessage("Rate is required"),
+    check("elementID").exists().withMessage("Element ID is required"),
+    check("userId").exists().withMessage("User ID is required"),
+  ],
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
@@ -77,10 +86,12 @@ reviewsRouter.put(
         next(error);
       } else {
         const media = await getMedia();
+        const users = await getUsers();
         const movieIndex = media.findIndex((movie) => movie.imdbID === req.body.elementID);
-        if (movieIndex !== -1) {
+        const userIndex = users.findIndex((user) => user._id === req.body.userId);
+        if (movieIndex !== -1 && userIndex !== -1) {
           // movie found
-          const reviewIndex = media[movieIndex].reviews.findIndex((review) => review._id === req.params._id);
+          const reviewIndex = media[movieIndex].reviews.findIndex((review) => review._id === req.params.id);
           if (reviewIndex !== -1) {
             const reviews = media[movieIndex].reviews;
             newReview = {

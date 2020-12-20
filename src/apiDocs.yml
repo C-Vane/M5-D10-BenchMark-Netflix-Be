@@ -1,0 +1,655 @@
+swagger: "2.0"
+info:
+  description: This is a simple API for a netflix app clone project
+  version: 1.0.0
+  title: Netflix Strive API
+
+  contact:
+    email: vanebrunocattabiani@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+  - name: Media
+  - name: Reviews
+  - name: Users
+paths:
+  /media:
+    get:
+      tags:
+        - Media
+      summary: get media
+      description: |
+        By passing in the appropriate options, you can search for media by Title, Year or Type
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: s
+          description: pass an optional search string to get the media that includes the title
+          required: false
+          type: string
+        - in: query
+          name: year
+          description: get media by year of relese
+          type: string
+        - in: query
+          name: type
+          description: get media by type ex(movie,series,documentary)
+          type: string
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/mediaItem"
+        400:
+          description: bad input parameter
+    post:
+      tags:
+        - Media
+      summary: adds a media item
+      description: Adds an item to the database
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Media
+          description: Media item to add
+          schema:
+            $ref: "#/definitions/mediaItem"
+      responses:
+        201:
+          description: item created
+          schema:
+            $ref: "#/definitions/mediaItem"
+        400:
+          description: invalid input, object invalid
+  /media/{id}:
+    get:
+      tags:
+        - Media
+      summary: get media by id
+      description: |
+        By passing in the correct id you can get a single media Item
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the media in question
+          required: true
+          type: string
+      responses:
+        200:
+          description: media item with given id
+          schema:
+            $ref: "#/definitions/mediaItem"
+        400:
+          description: Error occured
+        404:
+          description: Media not found
+    put:
+      tags:
+        - Media
+      summary: Edit a media item
+      description: Adds an item to the database
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the media in question
+          required: true
+          type: string
+        - in: body
+          name: Media
+          description: Media with edits
+          schema:
+            $ref: "#/definitions/mediaItem"
+      responses:
+        201:
+          description: item updated
+          schema:
+            $ref: "#/definitions/mediaItem"
+        400:
+          description: invalid input, object invalid
+        404:
+          description: media with given id not found
+    delete:
+      tags:
+        - Media
+      summary: Delete a media item with the given ID
+      description: url with Id to delete the media item
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the media in question
+          required: true
+          type: string
+      responses:
+        200:
+          description: Movie deleted
+        404:
+          description: Movie Not found
+  /media/{id}/upload:
+    post:
+      tags:
+        - Media
+      summary: adds or changes a poster for a media item
+      description: Adds an image url to the media item
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the media in question
+          required: true
+          type: string
+        - name: image
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+      responses:
+        201:
+          description: item created
+          schema:
+            $ref: "#/definitions/mediaItem"
+        400:
+          description: invalid input, object invalid
+  /media/catalogue/PDF:
+    get:
+      tags:
+        - Media
+      summary: get all media that includes a given title
+      description: |
+        By passing in the appropriate a string as a query you will receive a PDF file with a list of the media that include thus title
+      produces:
+        - multipart/form-data
+      parameters:
+        - in: query
+          name: title
+          description: pass a search string to get the media that includes the title
+          required: true
+          type: string
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: file
+        400:
+          description: Title query not given
+        404:
+          description: Movie not Found
+  /media/sendCatalogue/email:
+    get:
+      tags:
+        - Media
+      summary: send by email all media that includes a given title
+      description: |
+        By passing a string as a query you will send an email to a client with a PDF file with a list of the media that include thus title
+      produces:
+        - multipart/form-data
+      parameters:
+        - in: body
+          name: data
+          description: pass an object with a "title" and the "email" of  the client
+          required: true
+          schema:
+            $ref: "#/definitions/data"
+      responses:
+        200:
+          description: Email Sent
+        400:
+          description: Title query not given
+        404:
+          description: Movie not Found
+  /reviews/{id}:
+    get:
+      tags:
+        - Reviews
+      summary: get reviews for a media item with given id
+      description: |
+        By passing in paramentrs an Id get the reviews for the specified media item
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the media in question
+          required: true
+          type: string
+      responses:
+        200:
+          description: Reviews of given media item
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Reviews"
+        400:
+          description: bad input parameter
+    put:
+      tags:
+        - Reviews
+      summary: Edit a Review
+      description: Edit a Review with the given Id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the review in question
+          required: true
+          type: string
+        - in: body
+          name: Review
+          description: Review Item with edits
+          schema:
+            $ref: "#/definitions/Reviews"
+      responses:
+        201:
+          description: Review Updated
+          schema:
+            $ref: "#/definitions/Reviews"
+        400:
+          description: invalid input, object invalid
+  /reviews:
+    post:
+      tags:
+        - Reviews
+      summary: Add a Review
+      description: Add a Review to a media item
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Review
+          description: Review Item without _id (server generated)
+          schema:
+            $ref: "#/definitions/Reviews"
+      responses:
+        201:
+          description: Review Added
+          schema:
+            $ref: "#/definitions/Reviews"
+        400:
+          description: invalid input, object invalid
+  /reviews/{imdbID}/{id}:
+    delete:
+      tags:
+        - Reviews
+      summary: Delete a Review
+      description: Delete a Review with the given Id
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the review in question
+          required: true
+          type: string
+        - in: path
+          name: imdbID
+          description: pass the id of the media item that has the review
+          required: true
+          type: string
+      responses:
+        201:
+          description: Review Deleted
+        404:
+          description: Media not found || Review not Found
+        400:
+          description: Invalid input,
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Get all users that are clients
+      description: |
+        You can get all the users that have a role of client
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Get all the Users
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/user"
+    post:
+      tags:
+        - Users
+      summary: Adds an New User
+      description: Adds an user to the database
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: User
+          description: User to add
+          schema:
+            $ref: "#/definitions/user"
+      responses:
+        201:
+          description: User created
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: invalid input, object invalid
+        409:
+          description: email already used
+  /user/{id}:
+    get:
+      tags:
+        - Users
+      summary: get user by id
+      description: |
+        By passing in the correct id you can get a single user
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the user in question
+          required: true
+          type: string
+      responses:
+        200:
+          description: user with given id
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: Error occured
+        404:
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Edit a User data
+      description: Edits a users data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the user in question
+          required: true
+          type: string
+        - in: body
+          name: User
+          description: User with updates
+          schema:
+            $ref: "#/definitions/user"
+      responses:
+        201:
+          description: User updated
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: invalid input, object invalid
+        404:
+          description: User with given id not found
+    delete:
+      tags:
+        - Users
+      summary: Delete a User with the given ID
+      description: url with Id to delete the User
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the User in question
+          required: true
+          type: string
+      responses:
+        200:
+          description: User deleted
+        404:
+          description: User Not found
+  /user/admin:
+    get:
+      tags:
+        - Users
+      summary: Get all users that are admin
+      description: |
+        You can get all the users that have a role of admin
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Get all the Users
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/admin"
+    post:
+      tags:
+        - Users
+      summary: Adds an New Admin
+      description: Adds an Admin to the database
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Admin
+          description: Admin to add
+          schema:
+            $ref: "#/definitions/admin"
+      responses:
+        201:
+          description: User created
+          schema:
+            $ref: "#/definitions/admin"
+        400:
+          description: invalid input, object invalid
+        409:
+          description: email already used
+  /user/admin/{id}:
+    put:
+      tags:
+        - Users
+      summary: Edit an Admins data
+      description: Edits an Admins data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: pass the id of the admin in question
+          required: true
+          type: string
+        - in: body
+          name: Admin
+          description: User with updates
+          schema:
+            $ref: "#/definitions/admin"
+      responses:
+        201:
+          description: Admin updated
+          schema:
+            $ref: "#/definitions/admin"
+        400:
+          description: invalid input, object invalid
+        404:
+          description: User with given id not found
+definitions:
+  mediaItem:
+    type: object
+    required:
+      - Title
+      - Year
+      - Type
+      - Poster
+    properties:
+      imdbID:
+        type: string
+        format: uuid
+        example: tt1626038
+      Title:
+        type: string
+        example: The Avengers
+      Year:
+        type: string
+        example: 2010-2012 || 2010
+      Type:
+        type: string
+        example: movie
+      Poster:
+        type: string
+        format: url
+        example: "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg"
+      reviews:
+        $ref: "#/definitions/Reviews"
+  Reviews:
+    required:
+      - comment
+      - rate
+      - userId
+    properties:
+      comment:
+        type: string
+        example: "Cool movie"
+      rate:
+        type: integer
+        example: 5
+        maximum: 5
+        minimum: 1
+      userId:
+        type: string
+        format: uuid
+        example: tt1626038
+      elementID:
+        type: string
+        format: uuid
+        example: tt1626038
+      _id:
+        type: string
+        format: uuid
+        example: tt1626038
+      createdAt:
+        type: string
+        format: date-time
+        example: "2020-12-18T16:28:23.646Z"
+  data:
+    required:
+      - title
+      - email
+    properties:
+      title:
+        type: string
+        example: spider
+      email:
+        type: string
+        example: example@example.com
+  user:
+    required:
+      - name
+      - surname
+      - email
+      - yearOfBirth
+      - street
+      - city
+      - postalCode
+      - password
+    properties:
+      name:
+        type: string
+        example: Jon
+      surname:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: example@example.com
+      yearOfBirth:
+        type: integer
+        example: 1984
+      street:
+        type: string
+        example: This street, 3
+      city:
+        type: string
+        example: this,Neverland
+      postalCode:
+        type: string
+        example: 99999
+      cardNumber:
+        type: string
+        example: 99999999999999
+      expDate:
+        type: string
+        format: mm/yy
+        example: 12/21
+      password:
+        type: string
+        example: helloWorld1
+      role:
+        type: string
+        example: client
+  admin:
+    required:
+      - name
+      - surname
+      - email
+      - yearOfBirth
+      - street
+      - city
+      - postalCode
+      - password
+    properties:
+      name:
+        type: string
+        example: Jon
+      surname:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: example@example.com
+      yearOfBirth:
+        type: integer
+        example: 1984
+      street:
+        type: string
+        example: This street, 3
+      city:
+        type: string
+        example: this,Neverland
+      postalCode:
+        type: string
+        example: 99999
+      password:
+        type: string
+        example: helloWorld1
+      role:
+        type: string
+        example: admin
+
+schemes:
+  - https
+  - http
+# Added by API Auto Mocking Plugin
+#host: virtserver.swaggerhub.com
+#basePath: /vane/Netflix/1.0.0

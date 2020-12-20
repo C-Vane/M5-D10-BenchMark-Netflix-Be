@@ -63,7 +63,7 @@ usersRouter.post(
         if (email) {
           const err = new Error();
           err.message = "Email already used";
-          err.httpStatusCode = 404;
+          err.httpStatusCode = 409;
           next(err);
         } else {
           const newUser = {
@@ -106,7 +106,7 @@ usersRouter.post(
         if (email) {
           const err = new Error();
           err.message = "Email already used";
-          err.httpStatusCode = 404;
+          err.httpStatusCode = 409;
           next(err);
         } else {
           const newUser = {
@@ -152,7 +152,7 @@ usersRouter.put(
         if (email) {
           const err = new Error();
           err.message = "Email already used";
-          err.httpStatusCode = 404;
+          err.httpStatusCode = 409;
           next(err);
         } else {
           const userIndex = users.findIndex((user) => user._id === req.params.id);
@@ -202,7 +202,7 @@ usersRouter.put(
         if (email) {
           const err = new Error();
           err.message = "Email already used";
-          err.httpStatusCode = 404;
+          err.httpStatusCode = 409;
           next(err);
         } else {
           const userIndex = users.findIndex((user) => user._id === req.params.id);
