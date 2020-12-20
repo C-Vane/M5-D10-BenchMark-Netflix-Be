@@ -127,10 +127,10 @@ reviewsRouter.delete("/:imdbID/:id", async (req, res, next) => {
         // movie found
         const reviewIndex = media[movieIndex].reviews.findIndex((review) => review._id === req.params.id);
         if (reviewIndex !== -1) {
-          const reviews = media[movieIndex].reviews.filter((review) => review._id === req.params.id);
+          const reviews = media[movieIndex].reviews.filter((review) => review._id !== req.params.id);
           const updatedMedia = [...media.slice(0, movieIndex), { ...media[movieIndex], reviews }, ...media.slice(movieIndex + 1)];
           await writeMedia(updatedMedia);
-          res.send(reviewIndex + "DONE");
+          res.send("Review deleted");
         } else {
           const err = new Error();
           err.httpStatusCode = 404;

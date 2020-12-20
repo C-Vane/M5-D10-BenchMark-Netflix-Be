@@ -216,4 +216,73 @@ mediaRouter.get("/catalogue/PDF", async (req, res, next) => {
     next(error);
   }
 });
+
+//Send Email
+
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+mediaRouter.get("/sendCatalogue/email", async (req, res, next) => {
+  try {
+    if (req.body.title && req.body.email) {
+      const media = await getMedia();
+      const filterdMedia = media.filter((movie) => movie.Title.toLowerCase().includes(req.body.title.toLowerCase()));
+      if (filterdMedia) {
+        const pdfPath = join(__dirname, "current.pdf");
+        let pdfDoc = new PDFDocument();
+        pdfDoc.text("Movies Catalog for => " + req.body.title);
+        filterdMedia.map(async (movie, i) => {
+          pdfDoc.text(i + 1 + " " + movie.Title);
+          pdfDoc.text(movie.Year);
+          pdfDoc.text(movie.Type);
+        });
+
+        pdfDoc.pipe(fs.createWriteStream(pdfPath));
+        pdfDoc.end();
+
+        fs.readFile(pdfPath, function (err, data) {
+          if (err) {
+          }
+          if (data) {
+            const msg = {
+              to: req.body.email, // Change to your recipient
+              from: "vanecattabiani@gmail.com", // Change to your verified sender
+              subject: "Movies Catalogue",
+              text: "Thank you for requesting a movie catalogue for " + req.body.title,
+              html: `<strong>Thank you for requesting a movie catalogue for "${req.body.title}"!!!</strong>`,
+              attachments: [
+                {
+                  content: data.toString("base64"),
+                  filename: "movies.pdf",
+                  type: "application/pdf",
+                  disposition: "attachment",
+                },
+              ],
+            };
+            sgMail
+              .send(msg)
+              .then(() => {
+                res.status(201).send("Email sent");
+              })
+              .catch((error) => {
+                next(error);
+              });
+          }
+        });
+      } else {
+        const err = new Error();
+        err.httpStatusCode = 404;
+        err.message = "Movies Not Found";
+        next(err);
+      }
+    } else {
+      const err = new Error();
+      err.httpStatusCode = 400;
+      err.message = "Title or Email not given";
+      next(err);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = mediaRouter;

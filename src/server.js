@@ -7,6 +7,7 @@ const swaggerUI = require("swagger-ui-express");
 const { join } = require("path");
 const mediaRoutes = require("./services/media/index");
 const reviewsRoutes = require("./services/reviews/index");
+const usersRoutes = require("./services/users/index");
 
 const { notFoundHandler, badRequestHandler, genericErrorHandler } = require("./errorHandlers");
 
@@ -42,6 +43,7 @@ const swaggerDoc = yaml.load(join(__dirname, "apiDocs.yml"));
 server.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 server.use("/media", mediaRoutes);
 server.use("/reviews", reviewsRoutes);
+server.use("/user", usersRoutes);
 
 // ERROR HANDLERS
 server.use(badRequestHandler);

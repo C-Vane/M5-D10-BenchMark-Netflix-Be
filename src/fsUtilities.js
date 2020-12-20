@@ -2,7 +2,7 @@ const { readJSON, writeJSON } = require("fs-extra");
 const { join } = require("path");
 
 const mediaPath = join(__dirname, "./services/media/media.json");
-const reviewsPath = join(__dirname, "./services/reviews/reviews.json");
+const usersPath = join(__dirname, "./services/users/users.json");
 
 const readDB = async (filePath) => {
   try {
@@ -24,6 +24,6 @@ const writeDB = async (filePath, fileContent) => {
 module.exports = {
   getMedia: async () => readDB(mediaPath),
   writeMedia: async (mediaData) => writeDB(mediaPath, mediaData),
-  getReviews: async () => readDB(reviewsPath),
-  writeReviews: async (reviewsData) => writeDB(reviewsPath, reviewsData),
+  getUsers: async () => readDB(usersPath),
+  writeUsers: async (usersData) => writeDB(usersPath, usersData),
 };
