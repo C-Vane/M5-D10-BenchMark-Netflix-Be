@@ -11,7 +11,12 @@ const usersRouter = express.Router();
 usersRouter.get("/", async (req, res, next) => {
   try {
     const all = await getUsers();
-    const users = all.filter((user) => user.role === "client");
+    const users;
+    if (req.query && req.query.email) {
+      users = all.find((user) => user.email === req.query.email);
+    } else {
+      users = all.filter((user) => user.role === "client");
+    }
     res.send(users);
   } catch (error) {
     next(error);

@@ -321,9 +321,15 @@ paths:
         - Users
       summary: Get all users that are clients
       description: |
-        You can get all the users that have a role of client
+        You can get all the users that have a role of client, and users that have a specific email with query
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: email
+          description: pass an optional email string to get the users with that specific email
+          required: false
+          type: string
       responses:
         200:
           description: Get all the Users
