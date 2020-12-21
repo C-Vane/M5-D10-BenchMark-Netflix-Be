@@ -1,1 +1,47 @@
-[{"_id":"nzojpaxskiwytx0f","role":"client","name":"Vanessa","surname":"Cattabiani","email":"vanessacattabiani@gmail.com","yearOfBirth":1999,"street":"Louise Otto Peters str 3","city":"Freiburg, Germany","postalCode":"79100","expDate":123,"cardNumber":"0000000000000000","password":"testThis1","image":"https://res.cloudinary.com/vane/image/upload/v1608467930/striveFlix/users/xbcnzopbypffo9d8rl7v.jpg","myList":["tt4154756","tt0118661"]},{"_id":"nzojp6s4kiwyw96n","role":"client","name":"Vanessa","surname":"Cattabiani","email":"vanebrunocattabiani@gmail.com","yearOfBirth":1999,"street":"Louise Otto Peters str 3","city":"Freiburg, Germany","postalCode":"79100","expDate":123,"cardNumber":"0000000000000000","password":"testThis1"},{"_id":"nzojpamgkiwyzzsz","role":"admin","name":"Vane","surname":"Cattabiani","email":"vanecattabiani@gmail.com","yearOfBirth":1999,"street":"Louise Otto Peters str 3","city":"Freiburg, Germany","postalCode":"79100","password":"testThis1"}]
+[
+    {
+        "_id": "nzojpaxskiwytx0f",
+        "role": "client",
+        "name": "Vanessa",
+        "surname": "Cattabiani",
+        "email": "vanessacattabiani@gmail.com",
+        "yearOfBirth": 1999,
+        "address": "Louise Otto Peters str 3",
+        "city": "Freiburg, Germany",
+        "postalCode": "79100",
+        "cardExpDate": 123,
+        "cardNumber": "0000000000000000",
+        "password": "testThis1",
+        "image": "https://res.cloudinary.com/vane/image/upload/v1608467930/striveFlix/users/xbcnzopbypffo9d8rl7v.jpg",
+        "myList": [
+            "tt4154756",
+            "tt0118661"
+        ]
+    },
+    {
+        "_id": "nzojp6s4kiwyw96n",
+        "role": "client",
+        "name": "Vanessa",
+        "surname": "Cattabiani",
+        "email": "vanebrunocattabiani@gmail.com",
+        "yearOfBirth": 1999,
+        "address": "Louise Otto Peters str 3",
+        "city": "Freiburg, Germany",
+        "postalCode": "79100",
+        "cardExpDate": 123,
+        "cardNumber": "0000000000000000",
+        "password": "testThis1"
+    },
+    {
+        "_id": "nzojpamgkiwyzzsz",
+        "role": "admin",
+        "name": "Vane",
+        "surname": "Cattabiani",
+        "email": "vanecattabiani@gmail.com",
+        "yearOfBirth": 1999,
+        "address": "Louise Otto Peters str 3",
+        "city": "Freiburg, Germany",
+        "postalCode": "79100",
+        "password": "testThis1"
+    }
+]
