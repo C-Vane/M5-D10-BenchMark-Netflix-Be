@@ -11,7 +11,7 @@ const usersRouter = express.Router();
 usersRouter.get("/", async (req, res, next) => {
   try {
     const all = await getUsers();
-    const users;
+    let users;
     if (req.query && req.query.email) {
       users = all.find((user) => user.email === req.query.email);
     } else {
