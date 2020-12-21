@@ -25,7 +25,7 @@ usersRouter.get("/", async (req, res, next) => {
 usersRouter.get("/:id", async (req, res, next) => {
   try {
     const all = await getUsers();
-    const user = all.find((user) => (user_id = req.params.id));
+    const user = all.find((user) => user._id === req.params.id);
     res.send(user);
   } catch (error) {
     next(error);
