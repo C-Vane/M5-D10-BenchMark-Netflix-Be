@@ -252,7 +252,7 @@ mediaRouter.get("/sendCatalogue/email", async (req, res, next) => {
                 {
                   content: data.toString("base64"),
                   filename: "movies.pdf",
-                  type: "application/pdf",
+                  type: "plain/text",
                   disposition: "attachment",
                 },
               ],

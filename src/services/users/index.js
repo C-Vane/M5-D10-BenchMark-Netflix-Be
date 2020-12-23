@@ -6,6 +6,18 @@ const { createReadStream } = require("fs-extra");
 const { check, validationResult } = require("express-validator");
 const { getUsers, writeUsers, getMedia } = require("../../fsUtilities");
 const uniqid = require("uniqid");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
+const cloudinary = require("../../cloudinary");
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "striveFlix/users",
+  },
+});
+
+const cloudinaryMulter = multer({ storage: storage });
 
 const usersRouter = express.Router();
 usersRouter.get("/", async (req, res, next) => {
@@ -72,9 +84,9 @@ usersRouter.post(
           next(err);
         } else {
           const newUser = {
+            ...req.body,
             _id: uniqid(),
             role: "client",
-            ...req.body,
           };
           users.push(newUser);
           await writeUsers(users);
@@ -88,6 +100,7 @@ usersRouter.post(
 );
 usersRouter.post(
   "/admin",
+  cloudinaryMulter.single("image"),
   [
     check("name").isLength({ min: 4 }).withMessage("No way! Name too short!").exists().withMessage("Add a name please!"),
     check("surname").isLength({ min: 4 }).withMessage("No way! Surname too short!").exists().withMessage("Add a surname please!"),
@@ -118,6 +131,7 @@ usersRouter.post(
             _id: uniqid(),
             role: "admin",
             ...req.body,
+            image: req.file.path || "",
           };
           users.push(newUser);
           await writeUsers(users);
@@ -162,6 +176,7 @@ usersRouter.put(
         } else {
           const userIndex = users.findIndex((user) => user._id === req.params.id);
           if (userIndex !== -1) {
+            delete req.body._id;
             const updateUser = {
               ...users[userIndex],
               ...req.body,
@@ -212,6 +227,7 @@ usersRouter.put(
         } else {
           const userIndex = users.findIndex((user) => user._id === req.params.id);
           if (userIndex !== -1 && users[userIndex].role === "admin") {
+            delete req.body._id;
             const updateUser = {
               ...users[userIndex],
               ...req.body,
@@ -236,6 +252,11 @@ usersRouter.delete("/:id", async (req, res, next) => {
   try {
     const users = await getUsers();
     const filterdUsers = users.filter((user) => user._id !== req.params.id);
+    if (filterdUsers.length === users.length) {
+      const error = new Error("User not found");
+      error.httpStatusCode = 404;
+      return next(error);
+    }
     writeUsers(filterdUsers);
     res.status(201).send("Account has been deleted");
   } catch (error) {
@@ -296,18 +317,6 @@ usersRouter.delete("/:id/myList/:imdbId", async (req, res, next) => {
 });
 
 /// POST Profile picture
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const multer = require("multer");
-const cloudinary = require("../../cloudinary");
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "striveFlix/users",
-  },
-});
-
-const cloudinaryMulter = multer({ storage: storage });
 
 usersRouter.post("/:id/upload", cloudinaryMulter.single("image"), async (req, res, next) => {
   try {
