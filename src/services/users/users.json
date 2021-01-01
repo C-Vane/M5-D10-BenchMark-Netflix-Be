@@ -44,4 +44,17 @@
         "postalCode": "79100",
         "password": "testThis1"
     }
+    {
+        "_id": "nzojpamgkiwyzzsz",
+        "role": "admin",
+        "name": "Test",
+        "surname": "Test",
+        "email": "test@gmail.com",
+        "yearOfBirth": 1999,
+        "address": "Louise Otto Peters str 3",
+        "city": "Freiburg, Germany",
+        "postalCode": "79100",
+        "password": "testThis1",
+        "image": "https://res.cloudinary.com/vane/image/upload/v1608467930/striveFlix/users/xbcnzopbypffo9d8rl7v.jpg"
+    }
 ]

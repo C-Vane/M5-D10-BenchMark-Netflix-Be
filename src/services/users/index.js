@@ -34,20 +34,21 @@ usersRouter.get("/", async (req, res, next) => {
     next(error);
   }
 });
-usersRouter.get("/:id", async (req, res, next) => {
-  try {
-    const all = await getUsers();
-    const user = all.find((user) => user._id === req.params.id);
-    res.send(user);
-  } catch (error) {
-    next(error);
-  }
-});
+
 usersRouter.get("/admin", async (req, res, next) => {
   try {
     const all = await getUsers();
     const users = all.filter((user) => user.role === "admin");
     res.send(users);
+  } catch (error) {
+    next(error);
+  }
+});
+usersRouter.get("/:id", async (req, res, next) => {
+  try {
+    const all = await getUsers();
+    const user = all.find((user) => user._id === req.params.id);
+    res.send(user);
   } catch (error) {
     next(error);
   }
