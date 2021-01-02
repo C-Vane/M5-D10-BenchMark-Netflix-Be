@@ -53,7 +53,7 @@ reviewsRouter.post(
           reviews.push(newReview);
           const updatedMedia = [...media.slice(0, movieIndex), { ...media[movieIndex], reviews }, ...media.slice(movieIndex + 1)];
           await writeMedia(updatedMedia);
-          res.send(updatedMedia);
+          res.send(reviews);
         } else {
           const err = new Error();
           err.httpStatusCode = 404;
