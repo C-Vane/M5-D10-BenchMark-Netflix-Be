@@ -75,7 +75,7 @@ mediaRouter.post(
         };
         media.push(newMovie);
         await writeMedia(media);
-        res.satus(201).send(newMoviem);
+        res.status(201).send(newMovie);
       }
     } catch (error) {
       console.log(error);
