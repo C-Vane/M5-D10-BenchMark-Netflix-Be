@@ -129,9 +129,9 @@ usersRouter.post(
           next(err);
         } else {
           const newUser = {
-            _id: uniqid(),
             role: "admin",
             ...req.body,
+            _id: uniqid(),
             image: req.file ? req.file.path : "",
           };
           users.push(newUser);
