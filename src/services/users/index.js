@@ -132,7 +132,7 @@ usersRouter.post(
             _id: uniqid(),
             role: "admin",
             ...req.body,
-            image: req.file.path || "",
+            image: req.file ? req.file.path : "",
           };
           users.push(newUser);
           await writeUsers(users);
