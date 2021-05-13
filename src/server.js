@@ -23,7 +23,7 @@ const corsOptions =
   process.env.NODE_ENV === "production"
     ? {
         origin: function (origin, callback) {
-          if (whiteList.indexOf(origin) !== -1) {
+          if (whiteList.indexOf(origin) !== -1 || !origin) {
             // allowed
             callback(null, true);
           } else {
@@ -35,12 +35,13 @@ const corsOptions =
     : {};
 
 server.use(helmet());
-server.use(cors(corsOptions)); // CROSS ORIGIN RESOURCE SHARING
-
-//ROUTES
 const swaggerDoc = yaml.load(join(__dirname, "apiDocs.yml"));
 
 server.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+server.use(cors(corsOptions)); // CROSS ORIGIN RESOURCE SHARING
+
+//ROUTES
+
 server.use("/media", mediaRoutes);
 server.use("/reviews", reviewsRoutes);
 server.use("/user", usersRoutes);
